@@ -1,6 +1,7 @@
 {
   "name": "html-brunch",
   "version": "0.0.0",
+  "private": true,
   "description": "Adds HTML templates support to brunch",
   "main": "./lib/index",
   "scripts": {
