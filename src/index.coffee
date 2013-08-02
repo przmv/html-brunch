@@ -5,6 +5,16 @@ fs = require 'fs'
 String::endsWith = (str) ->
   if @match(new RegExp "#{str}$") then true else false
 
+rmdirRecursiveSync = (path) ->
+  if fs.existsSync path
+    for file in fs.readdirSync path
+      curPath = sysPath.join path, file
+      if fs.statSync(curPath).isDirectory()
+        rmdirRecursiveSync curPath
+      else
+        fs.unlinkSync curPath
+    fs.rmdirSync path
+
 module.exports = class HtmlCompiler
   brunchPlugin: yes
   type: 'template'
@@ -20,8 +30,8 @@ module.exports = class HtmlCompiler
     </script>
     """
 
-  getPublicDir: ->
-    @config.paths.public
+  getAssetsDir: ->
+    "app/assets"
 
   getTemplatesDir: ->
     if @config.files.templates.joinTo.endsWith sysPath.sep
@@ -29,7 +39,7 @@ module.exports = class HtmlCompiler
     else
       tpl = sysPath.dirname @config.files.templates.joinTo
 
-    sysPath.join @getPublicDir(), tpl
+    sysPath.join @getAssetsDir(), tpl
 
 
   compile: (data, path, callback) ->
@@ -46,3 +56,6 @@ module.exports = class HtmlCompiler
     finally
       # Return null because we're not going to join templates into one file
       callback error, null
+
+  onCompile: (generatedFiles) ->
+    rmdirRecursiveSync @getTemplatesDir()
