@@ -11,8 +11,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/NextUserSF/html-brunch.git"
-  },
-  "dependencies": {
-    "mkdirp": "~0.3.5"
   }
 }
