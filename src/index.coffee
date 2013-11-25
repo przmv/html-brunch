@@ -21,7 +21,13 @@ module.exports = class HtmlCompiler
 
   compile: (data, path, callback) ->
     try
-      app = path.split(sysPath.sep)[1]
+      app = path.split(sysPath.sep)
+      idx = app.indexOf "templates"
+      if idx == -1
+        idx = app.length - 2
+      else
+        idx--
+      app = app[1..idx].join("-")
       name = sysPath.basename path, "." + @extension
       id = "#{app}-#{name}-template"
       template = @wrapTemplate id, data
